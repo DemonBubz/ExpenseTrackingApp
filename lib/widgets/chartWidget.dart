@@ -63,7 +63,7 @@ class ChartWidget extends StatelessWidget {
               fit:FlexFit.tight,
               child: ChartRender(
                 amount: data.amount,
-                dateAbbr: DateFormat.E().format(data.date).substring(0, 1),
+                dateAbbr: DateFormat.E().format(data.date),
                 percentageBar:calcSum()==0?0.00:(data.amount/calcSum()),
               ),
             );
