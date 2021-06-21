@@ -1,24 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class TextFieldCard extends StatelessWidget {
- final titleController = TextEditingController();
-  final amountController = TextEditingController();
+class TextFieldCard extends StatefulWidget {
   final Function addTransaction;
   TextFieldCard(this.addTransaction);
+  State<StatefulWidget> createState() {
+    return TextFieldCardState(addTransaction);
+  }
+}
 
-  void addTransactionCaller(){
-    String title=titleController.text;
-    double amount=double.parse(amountController.text);
-    if(title.isEmpty || amount<=0){
+class TextFieldCardState extends State<TextFieldCard> {
+  final titleController = TextEditingController();
+  final amountController = TextEditingController();
+  final Function addTransactionPassedDown;
+  DateTime _pickedDate = DateTime.now();
+  var choosen = false;
+  TextFieldCardState(this.addTransactionPassedDown);
+
+  void addTransactionCaller() {
+    String title = titleController.text;
+    double amount = double.parse(amountController.text);
+    if(amountController.text.isEmpty || titleController.text.isEmpty){
       return;
     }
 
-    addTransaction(title:title, amount:amount);
+    if (title.isEmpty || amount <= 0 || choosen==false) {
+      return;
+    }
+    addTransactionPassedDown(title: title, amount: amount, date: _pickedDate);
+    Navigator.of(context).pop();
+  }
+
+  void bringCalendar() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(DateTime.now().year),
+            lastDate: DateTime.now())
+        .then((selectedDate) {
+      if (selectedDate == null) {
+        return;
+      }
+      setState(() {
+        choosen = true;
+        _pickedDate = selectedDate;
+      });
+    });
   }
 
   Widget build(BuildContext context) {
     return Card(
-      elevation:6,
+      elevation: 2,
       child: Container(
         padding: EdgeInsets.all(10),
         child: Column(
@@ -41,14 +73,37 @@ class TextFieldCard extends StatelessWidget {
               //alternative of onChanged
               controller: amountController,
               keyboardType: TextInputType.number,
-              onSubmitted:(_){
+              onSubmitted: (_) {
                 addTransactionCaller();
               },
             ),
-            FlatButton(
+            Container(
+              height: 70,
+              child: Row(children: [
+                Flexible(
+                  fit:FlexFit.tight,
+                  child:
+                Text(choosen
+                    ? "Choosen Date: ${DateFormat.yMd().format(_pickedDate)}"
+                    : "No Date Picked!"),
+                ),
+                TextButton(
+                    child: Text(
+                      "choose date",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: bringCalendar),
+              ]),
+            ),
+            RaisedButton(
               child: Text("Add new Entry"),
-              onPressed:(){ addTransactionCaller();},
-              textColor: Colors.purple,
+              onPressed: () {
+                addTransactionCaller();
+              },
+              color: Theme.of(context).primaryColor,
+              textColor: Theme.of(context).textTheme.button?.color,
             ),
           ],
         ),
