@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(),
       title: "My expense Tracker",
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.teal,
         accentColor: Colors.greenAccent,
         scaffoldBackgroundColor: Colors.white,
         textTheme: ThemeData.light().textTheme.copyWith(
@@ -80,7 +80,9 @@ class MyHomePageState extends State<MyHomePage> {
         context: ctx,
         builder: (BuildContext bContext) {
           return TextFieldCard(addTransaction);
-        });
+        },
+        isScrollControlled: true,
+        );
   }
 
   
