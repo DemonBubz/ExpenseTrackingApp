@@ -9,14 +9,20 @@ class ChartRender extends StatelessWidget {
       required this.dateAbbr,
       required this.percentageBar});
   Widget build(BuildContext context) {
-    return Column(
+    return LayoutBuilder(
+      builder:(context,constraints){
+        return Column(
       children: <Widget>[
-        FittedBox(
-          child: Text("Rs ${amount.toStringAsFixed(0)}"),
-        ),
-        SizedBox(height: 4),
         Container(
-          height: 90,
+          height: constraints.maxHeight*0.12,
+                  child: FittedBox(
+            
+            child: Text("Rs ${amount.toStringAsFixed(0)}",style:TextStyle(fontSize: 12)),
+          ),
+        ),
+        SizedBox(height: constraints.maxHeight*0.05),
+        Container(
+          height: constraints.maxHeight*0.6,
           width: 10,
           child: Stack(
             children: <Widget>[
@@ -38,11 +44,16 @@ class ChartRender extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 4),
+        SizedBox(height:constraints.maxHeight*0.05),
         Container(
+          height: constraints.maxHeight*0.15,
           child: Text(dateAbbr),
         ),
       ],
     );
+      },
+    ); 
+    
+    
   }
 }
